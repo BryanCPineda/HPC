@@ -56,19 +56,23 @@ int main()
     fillInMatriz(&b[0], tam, tam);
 
     /* Si queremos imprimir las matrices A y B */
-    printf("Matriz 1 \n");
-    printMatrix(&a[0], tam);
-    printf("Matriz 2 \n");
-    printMatrix(&b[0], tam);
-    
+    if(tam <=10)
+    {
+        printf("Matriz 1 \n");
+        printMatrix(&a[0], tam);
+        printf("Matriz 2 \n");
+        printMatrix(&b[0], tam);
+    }
     /* Mide el tiempo de la multiplicacion */
     gettimeofday(&start, 0);
     MatrixMultiply(tam, a, b, c);
     gettimeofday(&stop, 0);
     /* Si queremos podemos imprimir el resultado */
-    printf("Matriz Resultado \n");
-    printMatrix(&c[0], tam);
-
+    if (tam <= 10)
+    {
+        printf("Matriz Resultado \n");
+        printMatrix(&c[0], tam);
+    }
     // Se detiene el tiempo y se muestran los resultados
     fprintf(stdout, "%0.10f\n",(stop.tv_sec + stop.tv_usec * 1e-6) - (start.tv_sec + start.tv_usec * 1e-6));
 
