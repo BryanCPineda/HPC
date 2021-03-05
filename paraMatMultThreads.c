@@ -8,38 +8,12 @@
 void Display(int dim, float *mat);
 void Fill(int size, float *data);
 void MatMul_MT(int dim, float *A, float *B, float *Product, int noThread);
-int go(int number);
 
 int main()
 {
-    
-    for (int i = 0; i < 11; i++)
-    {
-        printf("Iteracion numero %d",i);
-        printf("\n");
-        go(100);
-        go(300);
-        go(500);
-        go(700);
-        go(1000);
-        go(1500);
-        go(2000);
-        go(2500);
-        go(3000);
-        go(3500);
-        go(5000);
-    }
-    
-}
-
-
-int go(int number)
-{
-    printf("para %d  ", number);
-    printf("datos\n");
-    int dim=number;
-    //printf("Introduzca el tamano de la matriz\n");
-    //scanf("%d", &dim);
+    int dim;
+    printf("Introduzca el tamano de la matriz\n");
+    scanf("%d", &dim);
     int noThread = 8;
 
     struct timeval t1, t2;
@@ -78,8 +52,6 @@ int go(int number)
         printf("Resultado = \n\n");
         Display(dim, Product);
     }
-
-
     free(A);
     free(B);
     free(Product);
@@ -107,7 +79,7 @@ void Fill(int size, float *data)
 }
 
 typedef struct{
-    int id; //thread index
+    int id; 
     int noThread;
     int dim;
     float *A, *B, *Product;
@@ -123,7 +95,7 @@ void MatMul_MT(int dim, float *A, float *B, float *Product, int noThread)
     pthread_attr_t attr;
     pthread_attr_init(&attr);
 
-    for(i = 0; i < noThread; i++){// Repeat for noThread times
+    for(i = 0; i < noThread; i++){
         threadInfo[i].id = i;
         threadInfo[i].noThread = noThread;
         threadInfo[i].dim = dim;
@@ -131,18 +103,17 @@ void MatMul_MT(int dim, float *A, float *B, float *Product, int noThread)
         threadInfo[i].B = B;
         threadInfo[i].Product = Product;
         
-        //pthread_attr_init(&attr);
         pthread_create(&tid[i], &attr, MatMul_ThreadFn, &threadInfo[i]);
     }
-         
+
     for(i = 0; i < noThread; i++)
-        pthread_join(tid[i], NULL);// wait for the children threads to terminate
+        pthread_join(tid[i], NULL);
 
     free(tid);
-    free(threadInfo);// deallocate pthread_t and ThreadInfo array
+    free(threadInfo);
 }
 
-void* MatMul_ThreadFn(void *param)      // thread function
+void* MatMul_ThreadFn(void *param)
 {
     ThreadInfo *pInfo = (ThreadInfo *)param;
     int i = 0, j = 0, k = 0;
@@ -150,7 +121,6 @@ void* MatMul_ThreadFn(void *param)      // thread function
     int end = pInfo->dim;
     int noThread = pInfo->noThread;
 
-    /*i-th thread computes only (i + k * noThread)-th rows*/
     for(i = pInfo->id; i < end; i+=noThread){
         for(j = 0; j < pInfo->dim; j++){
             pInfo->Product[i * pInfo->dim + j] = 0.F;
